@@ -1,0 +1,5 @@
+enum TipoSchede {
+  COMUNE,
+  PRIVATO,
+  PRIVATO_CONTRATTO
+}
