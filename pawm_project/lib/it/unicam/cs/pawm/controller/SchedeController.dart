@@ -89,6 +89,7 @@ bool creaSchedaPerContrattoPrivato(int durata, String data, String orario, Strin
   SchedaPrivato scheda = SchedaPrivato(numeroScheda, durata, data, orario, descrizione, cliente);
   contratto.listaSchede.add(scheda);
   contratto.oreRimanenti = contratto.oreRimanenti - durata;
+  log("scheda per contratto creata ed aggiunta alla lista");
 
   return contratto.listaSchede.contains(scheda);
 }

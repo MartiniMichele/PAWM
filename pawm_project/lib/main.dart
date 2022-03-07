@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/schede/SchedaPrivato.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  runApp( MainPage());
 }
 
 class MyApp extends StatelessWidget {
@@ -60,10 +62,15 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter = _counter + 2;
-      var scheda = SchedaPrivato(1, 1, 'data', 'orario', 'descrizione', 'cliente');
-      List<SchedaPrivato> lista = <SchedaPrivato>[];
-      lista.add(scheda);
-      print(lista.elementAt(0));
+      SchedaController controller = SchedaController();
+      controller.creaPrimaSchedaComune(1, 50, "ufficio", "data", "orario", "descrizione");
+      controller.creaPrimaSchedaPrivato(2, 10, "10/02", "10:10", "descrizione", "Mario");
+      controller.creaContrattoPrivato(100, 1500, "Luigi");
+      controller.creaSchedaPerContrattoPrivato(2, "15/04", "15:00", "descrizione", "Luigi");
+      print(controller.listaComune);
+      print(controller.listaPrivato);
+      print(controller.listaContratto);
+      print(controller.listaContratto.first.toString());
     });
   }
 
