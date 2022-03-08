@@ -8,7 +8,7 @@ class SchedaComune {
   late String data;
   late String orario;
   late String descrizione;
-  late TipoSchede tipo;
+  final String tipo = "COMUNE";
 
   SchedaComune(
       this.numeroIntervento,
@@ -16,14 +16,13 @@ class SchedaComune {
       this.ufficio,
       this.data,
       this.orario,
-      this.descrizione,)
-  {
-    tipo = TipoSchede.COMUNE;
-  }
+      this.descrizione,);
 
   @override
   String toString() {
-    return 'SchedaComune{numeroIntervento: $numeroIntervento, '
+    return
+        'SchedaComune{'
+        'numeroIntervento: $numeroIntervento, '
         'numeroOre: $numeroOre, '
         'ufficio: $ufficio, '
         'data: $data, '
@@ -31,4 +30,5 @@ class SchedaComune {
         'descrizione: $descrizione, '
         'tipo: $tipo}';
   }
+
 }

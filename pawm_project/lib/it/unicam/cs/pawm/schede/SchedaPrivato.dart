@@ -10,7 +10,7 @@ class SchedaPrivato{
   late String orario;
   late String descrizione;
   late String cliente;
-  late TipoSchede tipo;
+  final String tipo = "PRIVATO";
 
   SchedaPrivato(
       this.numeroScheda,
@@ -18,12 +18,12 @@ class SchedaPrivato{
       this.data,
       this.orario,
       this.descrizione,
-      this.cliente)
-  { tipo = TipoSchede.PRIVATO; }
+      this.cliente);
 
   @override
   String toString() {
-    return 'SchedaPrivato{numeroScheda: $numeroScheda, '
+    return
+        'SchedaPrivato{numeroScheda: $numeroScheda, '
         'durataIntervento: $durataIntervento, '
         'data: $data, '
         'orario: $orario, '

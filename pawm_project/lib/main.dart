@@ -63,11 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter = _counter + 2;
       SchedaController controller = SchedaController();
-      controller.creaPrimaSchedaComune(1, 50, "ufficio", "data", "orario", "descrizione");
       controller.creaPrimaSchedaPrivato(2, 10, "10/02", "10:10", "descrizione", "Mario");
       controller.creaContrattoPrivato(100, 1500, "Luigi");
       controller.creaSchedaPerContrattoPrivato(2, "15/04", "15:00", "descrizione", "Luigi");
-      print(controller.listaComune);
       print(controller.listaPrivato);
       print(controller.listaContratto);
       print(controller.listaContratto.first.toString());

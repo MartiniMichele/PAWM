@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/PrimaComune.dart';
 
 class MyDrawer extends StatelessWidget {
+  const MyDrawer({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -31,7 +34,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text("Crea schede"),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))
+                  MaterialPageRoute(builder: (context) => MainPage()))
             },
           ),
           ListTile(
