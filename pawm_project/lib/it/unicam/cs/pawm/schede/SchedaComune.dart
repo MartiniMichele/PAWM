@@ -1,18 +1,19 @@
-import './TipoSchede.dart';
+
+const String tableComune = "Schede_Comune";
 
 class SchedaComune {
 
-  late int numeroIntervento;
-  late int numeroOre;
+  final int numeroIntervento;
+  late final int idContratto;
+  late int durata;
   late String ufficio;
   late String data;
   late String orario;
   late String descrizione;
-  final String tipo = "COMUNE";
-
   SchedaComune(
       this.numeroIntervento,
-      this.numeroOre,
+      this.idContratto,
+      this.durata,
       this.ufficio,
       this.data,
       this.orario,
@@ -23,12 +24,21 @@ class SchedaComune {
     return
         'SchedaComune{'
         'numeroIntervento: $numeroIntervento, '
-        'numeroOre: $numeroOre, '
+        'numeroOre: $durata, '
         'ufficio: $ufficio, '
         'data: $data, '
         'orario: $orario, '
-        'descrizione: $descrizione, '
-        'tipo: $tipo}';
+        'descrizione: $descrizione}';
   }
+}
+
+class SchedaComuneFields {
+  static const String numeroScheda = "_numeroScheda";
+  static const String idContratto = "_idContratto";
+  static const String durata = "durata";
+  static const String ufficio = "ufficio";
+  static const String data = "data";
+  static const String orario = "orario";
+  static const String descrizione = "descrizione";
 
 }

@@ -22,7 +22,7 @@ class PdfWriter {
           child: pw.Column(children: [
         pw.Text(
             "Numero intervento:" + (_schedaComune.numeroIntervento).toString()), pw.Text(
-                "Durata intervento:" + (_schedaComune.numeroOre).toString()),
+                "Durata intervento:" + (_schedaComune.durata).toString()),
       ]));
     }));
     pdf.save();
