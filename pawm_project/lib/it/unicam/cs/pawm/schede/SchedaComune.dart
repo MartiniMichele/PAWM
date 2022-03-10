@@ -10,14 +10,39 @@ class SchedaComune {
   late String data;
   late String orario;
   late String descrizione;
-  SchedaComune(
-      this.numeroIntervento,
-      this.idContratto,
-      this.durata,
-      this.ufficio,
-      this.data,
-      this.orario,
-      this.descrizione,);
+
+  SchedaComune({
+    required this.numeroIntervento,
+    required this.idContratto,
+    required this.durata,
+    required this.ufficio,
+    required this.data,
+    required this.orario,
+    required this.descrizione,});
+
+  Map<String, dynamic> toMap() {
+    return {
+      SchedaComuneFields.numeroScheda : numeroIntervento,
+      SchedaComuneFields.idContratto : idContratto,
+      SchedaComuneFields.durata : durata,
+      SchedaComuneFields.ufficio : ufficio,
+      SchedaComuneFields.data : data,
+      SchedaComuneFields.orario : orario,
+      SchedaComuneFields.descrizione : descrizione,
+    };
+  }
+
+  static SchedaComune fromMap(Map<String, dynamic> map) {
+    return SchedaComune(
+      numeroIntervento: map[SchedaComuneFields.numeroScheda] as int,
+      idContratto: map[SchedaComuneFields.idContratto] as int,
+      durata: map[SchedaComuneFields.durata] as int,
+      ufficio: map[SchedaComuneFields.ufficio] as String,
+      data: map[SchedaComuneFields.data] as String,
+      orario: map[SchedaComuneFields.orario] as String,
+      descrizione: map[SchedaComuneFields.descrizione] as String,
+    );
+  }
 
   @override
   String toString() {

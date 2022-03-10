@@ -99,11 +99,71 @@ class DbManager {
     await db.insert(tableContrattoComune, contratto.toMap());
   }
 
+  Future<void> writeSchedaComune(SchedaComune scheda) async {
+    final db = await instance.database;
+    await db.insert(tableComune, scheda.toMap());
+  }
+
+  Future<void> writeSchedaPrivato(SchedaPrivato scheda) async {
+    final db = await instance.database;
+    await db.insert(tablePrivato, scheda.toMap());
+  }
+
+  Future<void> writeSchedaPrivatoContratto(SchedaPrivato scheda) async {
+    final db = await instance.database;
+    await db.insert(tablePrivatoContratto, scheda.toMap());
+  }
+
+  Future<void> writeContrattoPrivato(ContrattoPrivato contratto) async {
+    final db = await instance.database;
+    await db.insert(tableContrattoPrivato, contratto.toMap());
+  }
+
   Future<List<ContrattoComune>> readAllContrattoComune() async {
     final db = await instance.database;
     final result = await db.query(tableContrattoComune);
     
     return result.map((e) => ContrattoComune.fromMap(e)).toList();
+  }
+
+  Future<List<SchedaComune>> readAllSchedaComune(int id) async {
+    final db = await instance.database;
+    final result = await db.query(tableComune, where: '${SchedaComuneFields.idContratto} = ?', whereArgs: [id]);
+
+    return result.map((e) => SchedaComune.fromMap(e)).toList();
+  }
+
+  Future<List<SchedaPrivato>> readAllSchedaPrivato(int id) async {
+    final db = await instance.database;
+    final result = await db.query(tablePrivato, where: '${SchedaPrivatoFields.idContratto} = ?', whereArgs: [id]);
+
+    return result.map((e) => SchedaPrivato.fromMap(e)).toList();
+  }
+
+  Future<List<SchedaPrivato>> readAllSchedaPrivatoContratto(int id) async {
+    final db = await instance.database;
+    final result = await db.query(tablePrivatoContratto, where: '${SchedaPrivatoFields.idContratto} = ?', whereArgs: [id]);
+
+    return result.map((e) => SchedaPrivato.fromMap(e)).toList();
+  }
+
+  Future<List<ContrattoPrivato>> readAllContrattoPrivato() async {
+    final db = await instance.database;
+    final result = await db.query(tableContrattoPrivato);
+
+    return result.map((e) => ContrattoPrivato.fromMap(e)).toList();
+  }
+
+  Future<int> updateContrattoComune(ContrattoComune contratto) async {
+    final db = await instance.database;
+
+    return db.update(tableContrattoComune, contratto.toMap(), where: '${ContrattoComuneFields.id} = ?', whereArgs: [contratto.id]);
+  }
+
+  Future<int> updateContrattoPrivato(ContrattoPrivato contratto) async {
+    final db = await instance.database;
+
+    return db.update(tableContrattoPrivato, contratto.toMap(), where: '${ContrattoPrivatoFields.id} = ?', whereArgs: [contratto.id]);
   }
 
   Future close() async {

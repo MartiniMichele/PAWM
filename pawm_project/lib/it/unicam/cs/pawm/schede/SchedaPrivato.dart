@@ -12,22 +12,15 @@ class SchedaPrivato{
   late String orario;
   late String descrizione;
   late String cliente;
-  SchedaPrivato(
-      this.numeroScheda,
-      this.durataIntervento,
-      this.data,
-      this.orario,
-      this.descrizione,
-      this.cliente);
 
-  SchedaPrivato.contratto(
-      this.numeroScheda,
-      this.idContratto,
-      this.durataIntervento,
-      this.data,
-      this.orario,
-      this.descrizione,
-      this.cliente);
+  SchedaPrivato({
+    required this.numeroScheda,
+    required this.idContratto,
+    required this.durataIntervento,
+    required this.data,
+    required this.orario,
+    required this.descrizione,
+    required this.cliente});
 
   @override
   String toString() {
@@ -39,6 +32,31 @@ class SchedaPrivato{
         'descrizione: $descrizione, '
         'cliente: $cliente}';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      SchedaPrivatoFields.numeroScheda : numeroScheda,
+      SchedaPrivatoFields.idContratto : idContratto,
+      SchedaPrivatoFields.durata : durataIntervento,
+      SchedaPrivatoFields.data : data,
+      SchedaPrivatoFields.orario : orario,
+      SchedaPrivatoFields.descrizione : descrizione,
+      SchedaPrivatoFields.cliente : cliente,
+    };
+  }
+
+  static SchedaPrivato fromMap(Map<String, dynamic> map) {
+    return SchedaPrivato(
+      numeroScheda: map[SchedaPrivatoFields.numeroScheda] as int,
+      idContratto: map[SchedaPrivatoFields.idContratto] as int,
+      durataIntervento: map[SchedaPrivatoFields.durata] as int,
+      data: map[SchedaPrivatoFields.data] as String,
+      orario: map[SchedaPrivatoFields.orario] as String,
+      descrizione: map[SchedaPrivatoFields.descrizione] as String,
+      cliente: map[SchedaPrivatoFields.cliente] as String,
+    );
+  }
+
 }
 
 class SchedaPrivatoFields {

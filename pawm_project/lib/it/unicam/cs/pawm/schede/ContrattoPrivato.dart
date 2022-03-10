@@ -13,12 +13,12 @@ class ContrattoPrivato {
   late String cliente;
   late List<SchedaPrivato> listaSchede = <SchedaPrivato>[];
 
-  ContrattoPrivato(
-      this.id,
-      this.oreTotali,
-      this.oreRimanenti,
-      this.valoreContratto,
-      this.cliente);
+  ContrattoPrivato({
+    required this.id,
+    required this.oreTotali,
+    required this.oreRimanenti,
+    required this.valoreContratto,
+    required this.cliente});
 
   @override
   String toString() {
@@ -28,6 +28,27 @@ class ContrattoPrivato {
         'cliente: $cliente, '
         'listaSchede: $listaSchede}';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      ContrattoPrivatoFields.id : id,
+      ContrattoPrivatoFields.oreTotali : oreTotali,
+      ContrattoPrivatoFields.oreRimanenti : oreRimanenti,
+      ContrattoPrivatoFields.valoreContratto : valoreContratto,
+      ContrattoPrivatoFields.cliente : cliente
+    };
+  }
+
+  static ContrattoPrivato fromMap(Map<String, dynamic> map) {
+    return ContrattoPrivato(
+      id: map[ContrattoPrivatoFields.id] as int,
+      oreTotali: map[ContrattoPrivatoFields.oreTotali] as int,
+      oreRimanenti: map[ContrattoPrivatoFields.oreRimanenti] as int,
+      valoreContratto: map[ContrattoPrivatoFields.valoreContratto] as int,
+      cliente: map[ContrattoPrivatoFields.cliente] as String,
+    );
+  }
+
 }
 
 class ContrattoPrivatoFields {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/PrimaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 
 class ThreeButtons extends StatelessWidget {
   var _buttonText = [];
@@ -18,7 +19,7 @@ class ThreeButtons extends StatelessWidget {
           ElevatedButton(
             onPressed: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))},
+                  MaterialPageRoute(builder: (context) => MainPage()))},
             child: Text(_buttonText.first),
             style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
           ),
@@ -29,7 +30,7 @@ class ThreeButtons extends StatelessWidget {
           ElevatedButton(
             onPressed: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))},
+                  MaterialPageRoute(builder: (context) => MainPage()))},
             child: Text(_buttonText[1]),
             style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
           ),
@@ -39,7 +40,7 @@ class ThreeButtons extends StatelessWidget {
           ElevatedButton(
             onPressed: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))},
+                  MaterialPageRoute(builder: (context) => MainPage()))},
             child: Text(_buttonText.last),
             style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
           )

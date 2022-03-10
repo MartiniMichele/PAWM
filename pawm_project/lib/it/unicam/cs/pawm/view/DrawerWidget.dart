@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/PrimaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({Key? key}) : super(key: key);
@@ -23,10 +23,10 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             tileColor: Colors.white,
-            title: const Text("Crea prime schede"),
+            title: const Text("Crea Contratti"),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))
+                  MaterialPageRoute(builder: (context) => MainPage()))
             },
           ),
           ListTile(
@@ -42,7 +42,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text("Visualizza dati"),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PrimaComune()))
+                  MaterialPageRoute(builder: (context) => MainPage()))
             },
           )
         ],

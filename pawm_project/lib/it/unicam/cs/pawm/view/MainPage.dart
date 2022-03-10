@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/database/dbManager.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/PrimaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
 
 ///Widget contenente la base della prima pagina
 class MainPage extends StatelessWidget {
@@ -43,8 +44,9 @@ class _MainPageHome extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () => {
-                  controller.creaContrattoComune(100, 500),
-                  controller.salvaContrattoComune()
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CreaSchedeComune())),
+                controller.inizializzaComune()
                 },
                 child: Text(_buttonText.first),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -66,8 +68,9 @@ class _MainPageHome extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PrimaComune()))},
+                  controller.creaSchedaComune(10, "ufficio", "data", "orario", "descrizione"),
+                  controller.aggiornaContrattoComune()
+                },
                 child: Text(_buttonText.last),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
               )
