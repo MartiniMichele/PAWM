@@ -113,7 +113,7 @@ class _CreaSchedaPrivatoContrattoWidgetState extends State<CreaSchedaPrivatoCont
     await controller.creaSchedaPerContrattoPrivato(
         int.parse(durataController.text),
         "${data.day}/${data.month}/${data.year}",
-        "${data.hour}",
+        "${data.hour}:${data.minute}",
         descrizioneController.text,
         clienteController.text);
   }

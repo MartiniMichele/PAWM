@@ -99,11 +99,11 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
       );
 
 
-  Future<void> confermaCreazione() async {
+  void confermaCreazione() {
     controller.creaSchedaPrivato(
         int.parse(durataController.text),
         "${data.day}/${data.month}/${data.year}",
-        "${data.hour}",
+        "${data.hour}:${data.minute}",
         descrizioneController.text,
         clienteController.text);
   }

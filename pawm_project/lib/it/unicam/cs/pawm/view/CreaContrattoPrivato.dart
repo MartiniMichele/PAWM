@@ -92,7 +92,7 @@ class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
         textInputAction: TextInputAction.done,
       );
 
-  confermaCreazione() {
+  void confermaCreazione() {
     controller.creaContrattoPrivato(int.parse(oreController.text),
         int.parse(valoreController.text), clienteController.text);
   }

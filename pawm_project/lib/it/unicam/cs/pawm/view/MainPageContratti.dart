@@ -4,12 +4,14 @@ import 'package:pawm_project/it/unicam/cs/pawm/view/CreaContrattoPrivato.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
 
 class MainPageContratti extends StatelessWidget {
+  const MainPageContratti({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const MyDrawer(),
       appBar:
-          AppBar(backgroundColor: Colors.green, title: Text("Home Contratti")),
+          AppBar(backgroundColor: Colors.green, title: const Text("Home Contratti")),
       body: SizedBox(
         width: double.infinity,
         child: Column(
@@ -21,8 +23,11 @@ class MainPageContratti extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => const CreaContrattoComune())),
               },
-              child: Text("Crea Contratto Comune"),
+              child: const Text("Crea Contratto Comune"),
               style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             ElevatedButton(
               onPressed: () => {
@@ -31,7 +36,7 @@ class MainPageContratti extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => const CreaContrattoPrivato())),
               },
-              child: Text("Crea Contratto Privato"),
+              child: const Text("Crea Contratto Privato"),
               style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
             ),
           ],

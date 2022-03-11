@@ -122,7 +122,7 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         int.parse(durataController.text),
         ufficio,
         "${data.day}/${data.month}/${data.year}",
-        "${data.hour}",
+        "${data.hour}:${data.minute}",
         descrizioneController.text);
   }
 }
