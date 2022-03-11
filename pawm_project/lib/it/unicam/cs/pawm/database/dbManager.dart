@@ -18,7 +18,7 @@ class DbManager {
 
     if(_database != null) return _database!;
 
-    _database = await _initDB('pawm.db');
+    _database = await _initDB('pawm_2.db');
     return _database!;
   }
 
@@ -56,7 +56,7 @@ class DbManager {
     ${SchedaPrivatoFields.orario} $textType,
     ${SchedaPrivatoFields.descrizione} $textType,
     ${SchedaPrivatoFields.cliente} $textType,
-    PRIMARY KEY(${SchedaPrivatoFields.numeroScheda}, ${SchedaPrivatoFields.idContratto}))
+    PRIMARY KEY(${SchedaPrivatoFields.numeroScheda}, ${SchedaPrivatoFields.idContratto}, ${SchedaPrivatoFields.data}))
     ''');
 
     ///crea scheda comune
@@ -104,11 +104,6 @@ class DbManager {
     await db.insert(tableComune, scheda.toMap());
   }
 
-  Future<void> writeSchedaPrivato(SchedaPrivato scheda) async {
-    final db = await instance.database;
-    await db.insert(tablePrivato, scheda.toMap());
-  }
-
   Future<void> writeSchedaPrivatoContratto(SchedaPrivato scheda) async {
     final db = await instance.database;
     await db.insert(tablePrivatoContratto, scheda.toMap());
@@ -131,13 +126,6 @@ class DbManager {
     final result = await db.query(tableComune, where: '${SchedaComuneFields.idContratto} = ?', whereArgs: [id]);
 
     return result.map((e) => SchedaComune.fromMap(e)).toList();
-  }
-
-  Future<List<SchedaPrivato>> readAllSchedaPrivato(int id) async {
-    final db = await instance.database;
-    final result = await db.query(tablePrivato, where: '${SchedaPrivatoFields.idContratto} = ?', whereArgs: [id]);
-
-    return result.map((e) => SchedaPrivato.fromMap(e)).toList();
   }
 
   Future<List<SchedaPrivato>> readAllSchedaPrivatoContratto(int id) async {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageContratti.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class MyDrawer extends StatelessWidget {
         children: [
           Container(
             height: 80,
-            child: DrawerHeader(
+            child: const DrawerHeader(
                 child: Text(
                   "Menu",
                   style: TextStyle(color: Colors.white),
@@ -26,7 +28,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text("Crea Contratti"),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()))
+                  MaterialPageRoute(builder: (context) => MainPageContratti()))
             },
           ),
           ListTile(
@@ -34,7 +36,7 @@ class MyDrawer extends StatelessWidget {
             title: const Text("Crea schede"),
             onTap: () => {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()))
+                  MaterialPageRoute(builder: (context) => const MainPage()))
             },
           ),
           ListTile(

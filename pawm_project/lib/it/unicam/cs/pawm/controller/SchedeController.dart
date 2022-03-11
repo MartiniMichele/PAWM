@@ -22,8 +22,8 @@ class SchedaController {
   SchedaController._internal();
 
   ///  Crea una scheda intervento per il comune
-  bool creaSchedaComune(int oreIntervento, String ufficio, String data,
-      String orario, String descrizione) {
+  Future<bool> creaSchedaComune(int oreIntervento, String ufficio, String data,
+      String orario, String descrizione) async {
 
     int lastNumero;
 
@@ -49,7 +49,7 @@ class SchedaController {
         contrattoComune.oreRimanenti - oreIntervento;
     ///salva scheda nel DB ed aggiorna il contratto
     salvaSchedaComune(scheda);
-    aggiornaContrattoComune();
+    await aggiornaContrattoComune();
     log("Scheda comune creata e aggiunta al contratto");
     return contrattoComune.listaSchede.contains(scheda);
   }
@@ -100,11 +100,19 @@ class SchedaController {
 
   ///crea un contratto per un privato
   bool creaContrattoPrivato(int oreTotali, int valore, String cliente) {
+
     ContrattoPrivato contratto;
+    int lastId;
+
+    if(listaContratto.isEmpty) {
+      lastId = 0;
+    } else {
+      lastId = listaContratto.last.id;
+    }
 
     if (!listaContratto.any((element) => element.cliente == cliente)) {
       listaContratto.sort((a, b) => a.id.compareTo(b.id));
-      contratto = ContrattoPrivato(id: listaContratto.last.id + 1,
+      contratto = ContrattoPrivato(id: lastId + 1,
           oreTotali: oreTotali,
           oreRimanenti: oreTotali,
           valoreContratto: valore,
@@ -121,8 +129,8 @@ class SchedaController {
   }
 
   ///crea una scheda per un contratto, con ID associato
-  bool creaSchedaPerContrattoPrivato(int durata, String data, String orario,
-      String descrizione, String cliente) {
+  Future<bool> creaSchedaPerContrattoPrivato(int durata, String data, String orario,
+      String descrizione, String cliente) async {
     ContrattoPrivato contratto =
     listaContratto.singleWhere((element) => element.cliente == cliente);
     int numeroScheda;
@@ -141,10 +149,13 @@ class SchedaController {
         descrizione: descrizione,
         cliente: cliente);
 
-    ///salva la scheda nel DB
-    salvaSchedaPrivatoContratto(scheda);
+
     contratto.listaSchede.add(scheda);
     contratto.oreRimanenti = contratto.oreRimanenti - durata;
+    ///salva la scheda nel DB ed aggiorna il contratto
+    salvaSchedaPrivatoContratto(scheda);
+    await aggiornaContrattoPrivato(contratto.id);
+
     log("scheda per contratto creata ed aggiunta alla lista");
 
     return contratto.listaSchede.contains(scheda);
@@ -159,7 +170,7 @@ class SchedaController {
   }
 
   void salvaSchedaPrivato(SchedaPrivato scheda)  {
-    _db.writeSchedaPrivato(scheda);
+    _db.writeSchedaPrivatoContratto(scheda);
   }
 
   void salvaSchedaPrivatoContratto(SchedaPrivato scheda) {
@@ -170,58 +181,59 @@ class SchedaController {
     _db.writeContrattoPrivato(contratto);
   }
 
-  void leggiContrattoComune() async {
+  Future<void> leggiContrattoComune() async {
     List<ContrattoComune> lista = await _db.readAllContrattoComune();
     lista.sort((a, b) => a.id.compareTo(b.id));
     contrattoComune = lista.last;
   }
 
-  void leggiSchedeComune() async {
+  Future<void> leggiSchedeComune() async {
     List<SchedaComune> lista = await _db.readAllSchedaComune(contrattoComune.id);
     lista.sort((a, b) => a.numeroIntervento.compareTo(b.numeroIntervento));
 
     contrattoComune.listaSchede.addAll(lista);
   }
 
-  void leggiSchedePrivato() async {
-    List<SchedaPrivato> lista = await _db.readAllSchedaPrivato(0);
-    lista.sort((a, b) => a.numeroScheda.compareTo(b.numeroScheda));
-
-    listaPrivato.addAll(lista);
-  }
-
-  void leggiSchedePrivatoContratto(int id) async {
-    List<SchedaPrivato> lista = await _db.readAllSchedaPrivatoContratto(id);
-    lista.sort((a, b) => a.numeroScheda.compareTo(b.numeroScheda));
-
-    listaContratto.firstWhere((element) => element.id == id).listaSchede.addAll(lista);
-  }
-
-  void leggiContrattoPrivato() async {
+  Future<void> leggiContrattoPrivato() async{
     List<ContrattoPrivato> lista = await _db.readAllContrattoPrivato();
     lista.sort((a, b) => a.id.compareTo(b.id));
 
     listaContratto.addAll(lista);
   }
 
-  void aggiornaContrattoComune() async {
+  Future<void> leggiSchedePrivatoContratto(int id) async {
+    List<SchedaPrivato> lista = await _db.readAllSchedaPrivatoContratto(id);
+    lista.sort((a, b) => a.numeroScheda.compareTo(b.numeroScheda));
+
+    if(id == 0) {
+      listaPrivato.addAll(lista);
+    }
+    else {
+      listaContratto.firstWhere((element) => element.id == id).listaSchede.addAll(lista);
+    }
+
+  }
+
+  Future<void> aggiornaContrattoComune() async {
     await _db.updateContrattoComune(contrattoComune);
   }
 
-  void aggiornaContrattoPrivato(int id) async {
+  Future<void> aggiornaContrattoPrivato(int id) async {
     await _db.updateContrattoPrivato(listaContratto.firstWhere((element) => element.id == id));
   }
 
-  void inizializzaComune() {
-    leggiContrattoComune();
-    leggiSchedeComune();
+  Future<void> inizializzaComune() async {
+    await leggiContrattoComune();
+    await leggiSchedeComune();
   }
 
-  void inizializzaPrivato() {
-    leggiContrattoPrivato();
-    leggiSchedePrivato();
+  Future<void> inizializzaPrivato() async {
+
+    await leggiContrattoPrivato();
+    await leggiSchedePrivatoContratto(0);
+
     for (var element in listaContratto) {
-      leggiSchedePrivatoContratto(element.id);
+      await leggiSchedePrivatoContratto(element.id);
     }
   }
 }

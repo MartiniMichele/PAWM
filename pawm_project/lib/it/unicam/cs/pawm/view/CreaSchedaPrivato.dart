@@ -1,44 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivato.dart';
 
-class CreaSchedeComune extends StatefulWidget {
-  const CreaSchedeComune({Key? key}) : super(key: key);
+class CreaSchedaPrivato extends StatefulWidget {
+  const CreaSchedaPrivato({Key? key}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() {
-    return _CreaSchedaComuneWidgetState();
+    return _CreaSchedaPrivatoWidgetState();
+    }
   }
-}
 
-class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
+class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
-  DateTime data = DateTime.now();
-
-  //final textController = TextEditingController();
+  final clienteController = TextEditingController();
   final descrizioneController = TextEditingController();
-  String durataText = "durata intervento:";
-  String ufficio = "Urbanistica";
-  final uffici = [
-    "Ragioneria",
-    "Tributi",
-    "Ufficio Tecnico",
-    "Urbanistica",
-    "Affari Generali",
-    "Anagrafe",
-    "Vigili",
-    "Servizi Sociali",
-    " Protezione Civile"
-  ];
+  DateTime data = DateTime.now();
+  String durataText = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       appBar: AppBar(
-        title: const Text("Scheda Comune"),
+        title: const Text("Scheda Privato"),
         backgroundColor: Colors.green,
       ),
       body: Column(
@@ -52,40 +39,43 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
           const SizedBox(
             height: 10,
           ),
-          DropdownButton(
-              value: ufficio,
-              items: uffici.map(buildDropDown).toList(),
-              onChanged: (value) => setState(() => ufficio = value.toString())),
           const SizedBox(
             height: 10,
           ),
           buildMultilineText("descrizione"),
           Text(" ${descrizioneController.text}"),
           const SizedBox(
+            height: 10,
+          ),
+          buildCliente("Cliente"),
+          const SizedBox(
             height: 50,
           ),
           ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
               onPressed: confermaCreazione,
-              child: const Text("Crea Scheda")),
+              child: const Text("Crea Scheda"))
         ],
       ),
     );
   }
 
-  Widget buildDurata(String text) => TextField(
+  Widget buildDurata(String text) =>
+      TextField(
         controller: durataController,
         decoration: InputDecoration(
           hintText: text,
           border: const OutlineInputBorder(),
         ),
         keyboardType: TextInputType.number,
-        onChanged: (value) => setState(() {
-          durataText = " ${durataController.text}";
-        }),
+        onChanged: (value) =>
+            setState(() {
+              durataText = " ${durataController.text}";
+            }),
       );
 
-  Widget buildMultilineText(String text) => TextField(
+  Widget buildMultilineText(String text) =>
+      TextField(
         autocorrect: true,
         controller: descrizioneController,
         decoration: InputDecoration(
@@ -96,10 +86,10 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         maxLines: null,
       );
 
-/*
-  Widget buildText(String text) => TextField(
+  Widget buildCliente(String text) =>
+      TextField(
         autocorrect: true,
-        controller: textController,
+        controller: clienteController,
         decoration: InputDecoration(
           labelText: text,
           border: const OutlineInputBorder(),
@@ -107,22 +97,14 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.done,
       );
-      */
 
-  DropdownMenuItem<String> buildDropDown(String item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          item,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      );
 
   Future<void> confermaCreazione() async {
-    await controller.creaSchedaComune(
+    controller.creaSchedaPrivato(
         int.parse(durataController.text),
-        ufficio,
         "${data.day}/${data.month}/${data.year}",
         "${data.hour}",
-        descrizioneController.text);
+        descrizioneController.text,
+        clienteController.text);
   }
 }
