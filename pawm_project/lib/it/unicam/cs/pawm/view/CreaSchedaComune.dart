@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivato.dart';
 
 class CreaSchedeComune extends StatefulWidget {
   const CreaSchedeComune({Key? key}) : super(key: key);
@@ -15,9 +17,14 @@ class CreaSchedeComune extends StatefulWidget {
 class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
+  bool isFile = false;
+  File? fileImage;
   DateTime data = DateTime.now();
+  String numeroIntervento = "";
+  String oreRimanenti = "";
+  String dataText = "";
+  String oraText = "";
 
-  //final textController = TextEditingController();
   final descrizioneController = TextEditingController();
   String durataText = "durata intervento:";
   String ufficio = "Urbanistica";
@@ -30,7 +37,7 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
     "Anagrafe",
     "Vigili",
     "Servizi Sociali",
-    " Protezione Civile"
+    "Protezione Civile"
   ];
 
   @override
@@ -60,14 +67,51 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
             height: 10,
           ),
           buildMultilineText("descrizione"),
-          Text(" ${descrizioneController.text}"),
+          Row(
+            children: [
+              Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
+              const SizedBox(
+                width: 40,
+              ),
+              Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Text(dataText, style: const TextStyle(fontSize: 18)),
+              const SizedBox(
+                width: 40,
+              ),
+              Text(oraText, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          if (fileImage == null) const Text("No image"),
+          if (fileImage != null) buildFileImage(),
           const SizedBox(
             height: 50,
           ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
-              onPressed: confermaCreazione,
-              child: const Text("Crea Scheda")),
+          Row(
+            children: [
+              const SizedBox(
+                width: 40,
+              ),
+              buildImageButton(),
+              const SizedBox(
+                width: 40,
+              ),
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(primary: Colors.green.shade700),
+                  onPressed: confermaCreazione,
+                  child: const Text("Crea Scheda")),
+            ],
+          ),
         ],
       ),
     );
@@ -96,18 +140,26 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         maxLines: null,
       );
 
-/*
-  Widget buildText(String text) => TextField(
-        autocorrect: true,
-        controller: textController,
-        decoration: InputDecoration(
-          labelText: text,
-          border: const OutlineInputBorder(),
-        ),
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.done,
+  Widget buildImageButton() => ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
+        child: const Text("Scegli immagine"),
+        onPressed: () async {
+          final picker = ImagePicker();
+          final pickedFile =
+              await picker.pickImage(source: ImageSource.gallery);
+
+          if (pickedFile == null) {
+            return;
+          }
+
+          final file = File(pickedFile.path);
+          setState(() {
+            fileImage = file;
+          });
+        },
       );
-      */
+
+  Widget buildFileImage() => Image.file(fileImage!, height: 200, fit: BoxFit.cover,);
 
   DropdownMenuItem<String> buildDropDown(String item) => DropdownMenuItem(
         value: item,
@@ -124,5 +176,15 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         "${data.day}/${data.month}/${data.year}",
         "${data.hour}:${data.minute}",
         descrizioneController.text);
+
+    setState(() {
+      numeroIntervento = "N.Intervento: " +
+          controller.contrattoComune.listaSchede.last.numeroIntervento
+              .toString();
+      oreRimanenti = "ore Rimanenti: " +
+          controller.contrattoComune.oreRimanenti.toString();
+      dataText = "data: ${data.day}/${data.month}/${data.year}";
+      oraText = "ora: ${data.hour}:${data.minute}";
+    });
   }
 }

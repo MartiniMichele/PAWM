@@ -1,6 +1,5 @@
 
 
- const String tablePrivato = "Schede_Privato";
  const String tablePrivatoContratto = "Schede_Contratto_Privato";
 
 class SchedaPrivato{

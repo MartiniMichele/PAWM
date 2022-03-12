@@ -1,29 +1,36 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
 
 class CreaSchedaPrivato extends StatefulWidget {
   const CreaSchedaPrivato({Key? key}) : super(key: key);
 
-
   @override
   State<StatefulWidget> createState() {
     return _CreaSchedaPrivatoWidgetState();
-    }
   }
+}
 
 class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
   final clienteController = TextEditingController();
   final descrizioneController = TextEditingController();
+  bool isFile = false;
+  File? fileImage;
   DateTime data = DateTime.now();
   String durataText = "";
+  String numeroIntervento = "";
+  String dataText = "";
+  String oraText = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),
+      drawer: MyDrawer(),
       appBar: AppBar(
         title: const Text("Scheda Privato"),
         backgroundColor: Colors.green,
@@ -43,39 +50,69 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
             height: 10,
           ),
           buildMultilineText("descrizione"),
-          Text(" ${descrizioneController.text}"),
           const SizedBox(
             height: 10,
           ),
           buildCliente("Cliente"),
+          Row(
+            children: [
+              Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Text(dataText, style: const TextStyle(fontSize: 18)),
+              const SizedBox(
+                width: 40,
+              ),
+              Text(oraText, style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          if (fileImage == null) const Text("No image"),
+          if (fileImage != null) buildFileImage(),
           const SizedBox(
             height: 50,
           ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
-              onPressed: confermaCreazione,
-              child: const Text("Crea Scheda"))
+          Row(
+            children: [
+              const SizedBox(
+                width: 40,
+              ),
+              buildImageButton(),
+              const SizedBox(
+                width: 40,
+              ),
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(primary: Colors.green.shade700),
+                  onPressed: confermaCreazione,
+                  child: const Text("Crea Scheda")),
+            ],
+          )
         ],
       ),
     );
   }
 
-  Widget buildDurata(String text) =>
-      TextField(
+  Widget buildDurata(String text) => TextField(
         controller: durataController,
         decoration: InputDecoration(
           hintText: text,
           border: const OutlineInputBorder(),
         ),
         keyboardType: TextInputType.number,
-        onChanged: (value) =>
-            setState(() {
-              durataText = " ${durataController.text}";
-            }),
+        onChanged: (value) => setState(() {
+          durataText = " ${durataController.text}";
+        }),
       );
 
-  Widget buildMultilineText(String text) =>
-      TextField(
+  Widget buildMultilineText(String text) => TextField(
         autocorrect: true,
         controller: descrizioneController,
         decoration: InputDecoration(
@@ -86,8 +123,7 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         maxLines: null,
       );
 
-  Widget buildCliente(String text) =>
-      TextField(
+  Widget buildCliente(String text) => TextField(
         autocorrect: true,
         controller: clienteController,
         decoration: InputDecoration(
@@ -98,6 +134,26 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         textInputAction: TextInputAction.done,
       );
 
+  Widget buildImageButton() => ElevatedButton(
+    style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
+    child: const Text("Scegli immagine"),
+    onPressed: () async {
+      final picker = ImagePicker();
+      final pickedFile =
+      await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile == null) {
+        return;
+      }
+
+      final file = File(pickedFile.path);
+      setState(() {
+        fileImage = file;
+      });
+    },
+  );
+
+  Widget buildFileImage() => Image.file(fileImage!,height: 200, fit: BoxFit.cover,);
 
   void confermaCreazione() {
     controller.creaSchedaPrivato(
@@ -106,5 +162,12 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         "${data.hour}:${data.minute}",
         descrizioneController.text,
         clienteController.text);
+
+    setState(() {
+      numeroIntervento = "N.Intervento: " +
+          controller.listaPrivato.last.numeroScheda.toString();
+      dataText = "data: ${data.day}/${data.month}/${data.year}";
+      oraText = "ora: ${data.hour}:${data.minute}";
+    });
   }
 }

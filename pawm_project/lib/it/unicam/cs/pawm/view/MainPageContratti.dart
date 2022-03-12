@@ -9,13 +9,16 @@ class MainPageContratti extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),
-      appBar:
-          AppBar(backgroundColor: Colors.green, title: const Text("Home Contratti")),
+      drawer: MyDrawer(),
+      appBar: AppBar(
+          backgroundColor: Colors.green, title: const Text("Home Contratti")),
       body: SizedBox(
         width: double.infinity,
         child: Column(
           children: [
+            const SizedBox(
+              height: 50,
+            ),
             ElevatedButton(
               onPressed: () => {
                 Navigator.push(

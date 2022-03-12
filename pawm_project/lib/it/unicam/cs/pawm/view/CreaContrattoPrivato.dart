@@ -23,9 +23,9 @@ class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const MyDrawer(),
+        drawer: MyDrawer(),
         appBar: AppBar(
-          title: const Text("Contratto Comune"),
+          title: const Text("Contratto Privato"),
           backgroundColor: Colors.green,
         ),
         body: Column(

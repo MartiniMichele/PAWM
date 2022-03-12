@@ -37,6 +37,8 @@ dependencies:
   pdf: ^3.7.1
   sqflite: ^2.0.2
   path: ^1.8.0
+  image_picker: ^0.8.4+11
+  screenshot: ^1.2.3
 
 dev_dependencies:
   flutter_test:

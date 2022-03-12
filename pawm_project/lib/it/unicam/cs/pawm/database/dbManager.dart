@@ -18,7 +18,7 @@ class DbManager {
 
     if(_database != null) return _database!;
 
-    _database = await _initDB('pawm_2.db');
+    _database = await _initDB('pawm_6.db');
     return _database!;
   }
 
@@ -33,18 +33,6 @@ class DbManager {
     const idType = 'INTEGER PRIMARY KEY';
     const textType = 'TEXT NOT NULL';
     const integerType = 'INTEGER NOT NULL';
-
-    ///crea tabella scheda privato
-    await db.execute('''
-    CREATE TABLE $tablePrivato (
-    ${SchedaPrivatoFields.numeroScheda} $idType,
-    ${SchedaPrivatoFields.durata} $integerType,
-    ${SchedaPrivatoFields.data} $textType,
-    ${SchedaPrivatoFields.orario} $textType,
-    ${SchedaPrivatoFields.descrizione} $textType,
-    ${SchedaPrivatoFields.cliente} $textType
-    )
-    ''');
 
     ///crea tabella scheda privato per contratto
     await db.execute('''

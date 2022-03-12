@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageContratti.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({Key? key}) : super(key: key);
+  final SchedaController controller = SchedaController();
+
+  MyDrawer({Key? key}) : super(key: key);
 
 
   @override
@@ -39,16 +42,31 @@ class MyDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const MainPage()))
             },
           ),
-          ListTile(
-            tileColor: Colors.white,
-            title: const Text("Visualizza dati"),
-            onTap: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainPage()))
-            },
-          )
         ],
       ),
     );
+  }
+
+  void initComune(context) async {
+    try {
+      await controller.inizializzaComune();
+    } catch (err) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ErrorPage("ERRORE! Devi creare un contratto comune")));
+    }
+  }
+
+  void initPrivato(context) async {
+    if (controller.listaPrivato.isEmpty || controller.listaContratto.isEmpty) {
+      try {
+        await controller.inizializzaPrivato();
+      } catch (err) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
+      }
+    }
   }
 }

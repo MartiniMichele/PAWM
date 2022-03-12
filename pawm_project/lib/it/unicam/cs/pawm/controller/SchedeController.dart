@@ -69,7 +69,7 @@ class SchedaController {
     }
 
     SchedaPrivato scheda = SchedaPrivato(
-        numeroScheda: lastNumero,
+        numeroScheda: lastNumero + 1,
         idContratto: 0,
         durataIntervento: durata,
         data: data,
@@ -159,6 +159,16 @@ class SchedaController {
     log("scheda per contratto creata ed aggiunta alla lista");
 
     return contratto.listaSchede.contains(scheda);
+  }
+
+  List<String> clientiContratti() {
+    List<String> lista = [];
+
+    for (var element in listaContratto) {
+      lista.add(element.cliente);
+    }
+
+    return lista;
   }
 
   void salvaContrattoComune() {

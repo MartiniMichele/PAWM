@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivato.dart';
@@ -32,7 +31,7 @@ class _MainPageHome extends StatelessWidget {
     ];
 
     return Scaffold(
-        drawer: const MyDrawer(),
+        drawer: MyDrawer(),
         appBar: AppBar(backgroundColor: Colors.green, title: Text(_text[3])),
         body: SizedBox(
           width: double.infinity,
@@ -42,12 +41,12 @@ class _MainPageHome extends StatelessWidget {
                 height: 50,
               ),
               ElevatedButton(
-                onPressed: () => {
+                onPressed: () async {
+                  await initComune(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreaSchedeComune())),
-                  initComune(context)
+                          builder: (context) => const CreaSchedeComune()));
                 },
                 child: Text(_text[0]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -57,12 +56,12 @@ class _MainPageHome extends StatelessWidget {
               ),
               //metodo senza parentesi perché è un riferimento ad esso
               ElevatedButton(
-                onPressed: () => {
+                onPressed: () async {
+                  await initPrivato(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreaSchedaPrivato())),
-                  initPrivato(context)
+                          builder: (context) => const CreaSchedaPrivato()));
                 },
                 child: Text(_text[1]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -71,13 +70,13 @@ class _MainPageHome extends StatelessWidget {
                 height: 50,
               ),
               ElevatedButton(
-                onPressed: () => {
+                onPressed: () async {
+                  await initPrivato(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const CreaSchedaPrivatoContratto())),
-                  initPrivato(context)
+                              const CreaSchedaPrivatoContratto()));
                 },
                 child: Text(_text[2]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -87,7 +86,8 @@ class _MainPageHome extends StatelessWidget {
         ));
   }
 
-  void initComune(context) async {
+  Future<void> initComune(context) async {
+
     try {
       await controller.inizializzaComune();
     } catch (err) {
@@ -99,15 +99,29 @@ class _MainPageHome extends StatelessWidget {
     }
   }
 
-  void initPrivato(context) async {
-
-    if(controller.listaPrivato.isEmpty && controller.listaContratto.isEmpty) {
+  Future<void> initPrivato(context) async {
+    print(controller.listaContratto);
+    print(controller.listaPrivato);
+    if (controller.listaPrivato.isEmpty && controller.listaContratto.isEmpty) {
       try {
         await controller.inizializzaPrivato();
       } catch (err) {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
       }
+    }
+    print(controller.listaContratto);
+    print(controller.listaPrivato);
+    //checkDati(context);
+  }
+
+  void checkDati(context) {
+    if (controller.listaContratto.isEmpty) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ErrorPage("ERRORE! Devi creare un contratto privato")));
     }
   }
 }
