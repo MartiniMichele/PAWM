@@ -18,7 +18,7 @@ class DbManager {
 
     if(_database != null) return _database!;
 
-    _database = await _initDB('pawm_6.db');
+    _database = await _initDB('easytech.db');
     return _database!;
   }
 

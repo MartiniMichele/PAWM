@@ -42,11 +42,12 @@ class _MainPageHome extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await initComune(context);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const CreaSchedeComune()));
+                  await initComune(context);
                 },
                 child: Text(_text[0]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -57,11 +58,12 @@ class _MainPageHome extends StatelessWidget {
               //metodo senza parentesi perché è un riferimento ad esso
               ElevatedButton(
                 onPressed: () async {
-                  await initPrivato(context);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const CreaSchedaPrivato()));
+                  await initPrivato(context);
                 },
                 child: Text(_text[1]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -71,12 +73,13 @@ class _MainPageHome extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await initPrivato(context);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                               const CreaSchedaPrivatoContratto()));
+                  await initPrivato(context);
                 },
                 child: Text(_text[2]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
