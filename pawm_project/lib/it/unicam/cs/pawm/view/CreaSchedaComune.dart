@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 class CreaSchedeComune extends StatefulWidget {
   const CreaSchedeComune({Key? key}) : super(key: key);
@@ -17,14 +21,13 @@ class CreaSchedeComune extends StatefulWidget {
 class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
-  bool isFile = false;
+  final screenshotController = ScreenshotController();
   File? fileImage;
   DateTime data = DateTime.now();
   String numeroIntervento = "";
   String oreRimanenti = "";
   String dataText = "";
   String oraText = "";
-
   final descrizioneController = TextEditingController();
   String durataText = "durata intervento:";
   String ufficio = "Urbanistica";
@@ -42,77 +45,81 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: const Text("Scheda Comune"),
-        backgroundColor: Colors.green,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text("durata intervento: ${durataController.text}",
-              style: const TextStyle(fontSize: 18)),
-          buildDurata("inserisci durata"),
-          const SizedBox(
-            height: 10,
-          ),
-          DropdownButton(
-              value: ufficio,
-              items: uffici.map(buildDropDown).toList(),
-              onChanged: (value) => setState(() => ufficio = value.toString())),
-          const SizedBox(
-            height: 10,
-          ),
-          buildMultilineText("descrizione"),
-          Row(
-            children: [
-              Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
-              const SizedBox(
-                width: 40,
-              ),
-              Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Text(dataText, style: const TextStyle(fontSize: 18)),
-              const SizedBox(
-                width: 40,
-              ),
-              Text(oraText, style: const TextStyle(fontSize: 18)),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          if (fileImage == null) const Text("No image"),
-          if (fileImage != null) buildFileImage(),
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 40,
-              ),
-              buildImageButton(),
-              const SizedBox(
-                width: 40,
-              ),
-              ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(primary: Colors.green.shade700),
-                  onPressed: confermaCreazione,
-                  child: const Text("Crea Scheda")),
-            ],
-          ),
-        ],
+    return Screenshot(
+      controller: screenshotController,
+      child: Scaffold(
+        drawer: MyDrawer(),
+        appBar: AppBar(
+          title: const Text("Scheda Comune"),
+          backgroundColor: Colors.green,
+        ),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Text("durata intervento: ${durataController.text}",
+                style: const TextStyle(fontSize: 18)),
+            buildDurata("inserisci durata"),
+            const SizedBox(
+              height: 10,
+            ),
+            DropdownButton(
+                value: ufficio,
+                items: uffici.map(buildDropDown).toList(),
+                onChanged: (value) =>
+                    setState(() => ufficio = value.toString())),
+            const SizedBox(
+              height: 10,
+            ),
+            buildMultilineText("descrizione"),
+            Row(
+              children: [
+                Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
+                const SizedBox(
+                  width: 40,
+                ),
+                Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Text(dataText, style: const TextStyle(fontSize: 18)),
+                const SizedBox(
+                  width: 40,
+                ),
+                Text(oraText, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            if (fileImage == null) const Text("No image"),
+            if (fileImage != null) buildFileImage(),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 40,
+                ),
+                buildImageButton(),
+                const SizedBox(
+                  width: 40,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green.shade700),
+                    onPressed: confermaCreazione,
+                    child: const Text("Crea Scheda")),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -159,7 +166,11 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         },
       );
 
-  Widget buildFileImage() => Image.file(fileImage!, height: 200, fit: BoxFit.cover,);
+  Widget buildFileImage() => Image.file(
+        fileImage!,
+        height: 200,
+        fit: BoxFit.cover,
+      );
 
   DropdownMenuItem<String> buildDropDown(String item) => DropdownMenuItem(
         value: item,
@@ -186,5 +197,33 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
       dataText = "data: ${data.day}/${data.month}/${data.year}";
       oraText = "ora: ${data.hour}:${data.minute}";
     });
+
+    final image = await screenshotController.capture();
+    await saveImage(image!);
+  }
+
+  Future<void> saveImage(Uint8List bytes) async {
+    String name =
+        controller.contrattoComune.listaSchede.last.numeroIntervento.toString();
+
+    if (await _requestPermission(Permission.storage)) {
+      await ImageGallerySaver.saveImage(bytes, name: "Mit_Comune_" + name);
+    } else {
+      return;
+    }
+    await [Permission.storage].request();
+  }
+
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

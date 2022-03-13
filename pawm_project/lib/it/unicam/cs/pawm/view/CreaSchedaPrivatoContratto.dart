@@ -1,9 +1,14 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/schede/ContrattoPrivato.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
 
 class CreaSchedaPrivatoContratto extends StatefulWidget {
   const CreaSchedaPrivatoContratto({Key? key}) : super(key: key);
@@ -19,6 +24,7 @@ class _CreaSchedaPrivatoContrattoWidgetState
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
   final descrizioneController = TextEditingController();
+  final screenshotController = ScreenshotController();
   bool isFile = false;
   File? fileImage;
   DateTime data = DateTime.now();
@@ -38,81 +44,84 @@ class _CreaSchedaPrivatoContrattoWidgetState
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: const Text("Scheda Privato Contratto"),
-        backgroundColor: Colors.green,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text("durata intervento: ${durataController.text}",
-              style: const TextStyle(fontSize: 18)),
-          buildDurata("inserisci durata"),
-          const SizedBox(
-            height: 10,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          buildMultilineText("descrizione"),
-          const SizedBox(
-            height: 10,
-          ),
-          DropdownButton(
-              value: cliente,
-              items: clientiItems,
-              onChanged: (value) => setState(() => cliente = value.toString())),
-          Row(
-            children: [
-              Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
-              const SizedBox(
-                width: 40,
-              ),
-              Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Text(dataText, style: const TextStyle(fontSize: 18)),
-              const SizedBox(
-                width: 40,
-              ),
-              Text(oraText, style: const TextStyle(fontSize: 18)),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          if (fileImage == null) const Text("No image"),
-          if (fileImage != null) buildFileImage(),
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 40,
-              ),
-              buildImageButton(),
-              const SizedBox(
-                width: 40,
-              ),
-              ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(primary: Colors.green.shade700),
-                  onPressed: confermaCreazione,
-                  child: const Text("Crea Scheda")),
-            ],
-          )
-        ],
+    return Screenshot(
+      controller: screenshotController,
+      child: Scaffold(
+        drawer: MyDrawer(),
+        appBar: AppBar(
+          title: const Text("Scheda Privato Contratto"),
+          backgroundColor: Colors.green,
+        ),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Text("durata intervento: ${durataController.text}",
+                style: const TextStyle(fontSize: 18)),
+            buildDurata("inserisci durata"),
+            const SizedBox(
+              height: 10,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            buildMultilineText("descrizione"),
+            const SizedBox(
+              height: 10,
+            ),
+            DropdownButton(
+                value: cliente,
+                items: clientiItems,
+                onChanged: (value) =>
+                    setState(() => cliente = value.toString())),
+            Row(
+              children: [
+                Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
+                const SizedBox(
+                  width: 40,
+                ),
+                Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Text(dataText, style: const TextStyle(fontSize: 18)),
+                const SizedBox(
+                  width: 40,
+                ),
+                Text(oraText, style: const TextStyle(fontSize: 18)),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            if (fileImage == null) const Text("No image"),
+            if (fileImage != null) buildFileImage(),
+            const SizedBox(
+              height: 50,
+            ),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 40,
+                ),
+                buildImageButton(),
+                const SizedBox(
+                  width: 40,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.green.shade700),
+                    onPressed: confermaCreazione,
+                    child: const Text("Crea Scheda")),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -198,11 +207,47 @@ class _CreaSchedaPrivatoContrattoWidgetState
         descrizioneController.text,
         cliente);
 
+    final ContrattoPrivato contratto = controller.listaContratto
+        .firstWhere((element) => element.cliente == cliente);
+
     setState(() {
-      numeroIntervento = "N.Intervento: " +
-          controller.listaContratto.firstWhere((element) => element.cliente == cliente).listaSchede.last.numeroScheda.toString();
+      numeroIntervento =
+          "N.Intervento: " + contratto.listaSchede.last.numeroScheda.toString();
+      oreRimanenti = "ore Rimanenti: " +
+          controller.listaContratto
+              .firstWhere((element) => element.cliente == cliente)
+              .oreRimanenti
+              .toString();
       dataText = "data: ${data.day}/${data.month}/${data.year}";
       oraText = "ora: ${data.hour}:${data.minute}";
     });
+
+    final image = await screenshotController.capture();
+    await saveImage(image!, contratto);
+  }
+
+  Future<void> saveImage(Uint8List bytes, ContrattoPrivato contratto) async {
+    String num = contratto.listaSchede.last.numeroScheda.toString();
+
+    if (await _requestPermission(Permission.storage)) {
+      await ImageGallerySaver.saveImage(bytes,
+          name: "Mit_Contratto_${cliente}_" + num);
+    } else {
+      return;
+    }
+    await [Permission.storage].request();
+  }
+
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

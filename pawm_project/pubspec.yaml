@@ -39,6 +39,10 @@ dependencies:
   path: ^1.8.0
   image_picker: ^0.8.4+11
   screenshot: ^1.2.3
+  image_gallery_saver: ^1.7.1
+  permission_handler: ^9.2.0
+  gallery_saver: ^2.3.2
+  path_provider: ^2.0.9
 
 dev_dependencies:
   flutter_test:

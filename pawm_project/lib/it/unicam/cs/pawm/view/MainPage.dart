@@ -100,8 +100,6 @@ class _MainPageHome extends StatelessWidget {
   }
 
   Future<void> initPrivato(context) async {
-    print(controller.listaContratto);
-    print(controller.listaPrivato);
     if (controller.listaPrivato.isEmpty && controller.listaContratto.isEmpty) {
       try {
         await controller.inizializzaPrivato();
@@ -110,9 +108,7 @@ class _MainPageHome extends StatelessWidget {
             MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
       }
     }
-    print(controller.listaContratto);
-    print(controller.listaPrivato);
-    //checkDati(context);
+    checkDati(context);
   }
 
   void checkDati(context) {
