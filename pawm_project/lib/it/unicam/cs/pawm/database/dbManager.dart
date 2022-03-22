@@ -142,6 +142,22 @@ class DbManager {
     return db.update(tableContrattoPrivato, contratto.toMap(), where: '${ContrattoPrivatoFields.id} = ?', whereArgs: [contratto.id]);
   }
 
+  Future<int> updateSchedaComune(SchedaComune scheda) async {
+    final db = await instance.database;
+
+    return db.update(tableComune, scheda.toMap(),
+        where: '${SchedaComuneFields.numeroScheda} = ? AND ${SchedaComuneFields.idContratto} = ?',
+        whereArgs: [scheda.numeroIntervento, scheda.idContratto]);
+  }
+
+  Future<int> updateSchedaPrivato(SchedaPrivato scheda) async {
+    final db = await instance.database;
+
+    return db.update(tablePrivatoContratto, scheda.toMap(),
+        where: '${SchedaPrivatoFields.numeroScheda} = ? AND ${SchedaPrivatoFields.idContratto} = ?',
+        whereArgs: [scheda.numeroScheda, scheda.idContratto]);
+  }
+
   Future close() async {
     final db = await instance.database;
 

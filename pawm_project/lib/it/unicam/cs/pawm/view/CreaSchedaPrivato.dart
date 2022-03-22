@@ -182,6 +182,8 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
 
     final image = await screenshotController.capture();
     await saveImage(image!);
+
+    _showToast(context);
   }
 
   Future<void> saveImage(Uint8List bytes) async {
@@ -206,5 +208,15 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         return false;
       }
     }
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Scheda creata'),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

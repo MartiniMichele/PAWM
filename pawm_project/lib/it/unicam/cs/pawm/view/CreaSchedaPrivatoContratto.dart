@@ -224,6 +224,8 @@ class _CreaSchedaPrivatoContrattoWidgetState
 
     final image = await screenshotController.capture();
     await saveImage(image!, contratto);
+
+    _showToast(context);
   }
 
   Future<void> saveImage(Uint8List bytes, ContrattoPrivato contratto) async {
@@ -249,5 +251,15 @@ class _CreaSchedaPrivatoContrattoWidgetState
         return false;
       }
     }
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Scheda creata'),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

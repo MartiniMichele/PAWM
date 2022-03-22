@@ -79,5 +79,18 @@ class _CreaContrattoComuneState extends State<CreaContrattoComune> {
   confermaCreazione() {
     controller.creaContrattoComune(
         int.parse(oreController.text), int.parse(valoreController.text));
+
+    _showToast(context);
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Contratto creato'),
+        action: SnackBarAction(
+            label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

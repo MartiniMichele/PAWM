@@ -22,13 +22,13 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
   final screenshotController = ScreenshotController();
+  final descrizioneController = TextEditingController();
   File? fileImage;
   DateTime data = DateTime.now();
   String numeroIntervento = "";
   String oreRimanenti = "";
   String dataText = "";
   String oraText = "";
-  final descrizioneController = TextEditingController();
   String durataText = "durata intervento:";
   String ufficio = "Urbanistica";
   final uffici = [
@@ -200,6 +200,8 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
 
     final image = await screenshotController.capture();
     await saveImage(image!);
+
+    _showToast(context);
   }
 
   Future<void> saveImage(Uint8List bytes) async {
@@ -225,5 +227,15 @@ class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
         return false;
       }
     }
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Scheda creata'),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

@@ -95,5 +95,17 @@ class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
   void confermaCreazione() {
     controller.creaContrattoPrivato(int.parse(oreController.text),
         int.parse(valoreController.text), clienteController.text);
+
+    _showToast(context);
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Contratto creato'),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

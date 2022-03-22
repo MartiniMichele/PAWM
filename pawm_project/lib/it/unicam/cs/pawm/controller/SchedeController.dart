@@ -161,6 +161,60 @@ class SchedaController {
     return contratto.listaSchede.contains(scheda);
   }
 
+  ///metodo per aggiornare i dati di una scheda comune, corregge anche il conto delle ore rimanenti del contratto
+  Future<void> correggiSchedaComune(int numeroScheda, int durata, String ufficio, String descrizione) async {
+    SchedaComune scheda = contrattoComune.listaSchede.firstWhere((element) => element.numeroIntervento == numeroScheda);
+    int differenzaOre;
+
+    if(scheda.durata > durata) {
+      differenzaOre = scheda.durata - durata;
+      scheda.durata = durata;
+      contrattoComune.oreRimanenti = contrattoComune.oreRimanenti + differenzaOre;
+    }
+    if(scheda.durata < durata) {
+      differenzaOre = durata - scheda.durata;
+      scheda.durata = durata;
+      contrattoComune.oreRimanenti = contrattoComune.oreRimanenti - differenzaOre;
+    }
+
+    scheda.ufficio = ufficio;
+    scheda.descrizione = descrizione;
+    await aggiornaSchedaComune(scheda);
+    await aggiornaContrattoComune();
+  }
+
+  ///metodo per aggiornare una scheda privato
+  Future<void> correggiSchedaPrivato(int numeroScheda, int durata, String descrizione, String cliente) async {
+    SchedaPrivato scheda = listaPrivato.firstWhere((element) => element.numeroScheda == numeroScheda);
+    scheda.durataIntervento = durata;
+    scheda.descrizione = descrizione;
+    scheda.cliente = cliente;
+
+    await aggiornaSchedaPrivato(scheda);
+  }
+
+  ///metodo per aggiornare una scheda privato per contratto
+  Future<void> correggiSchedaPrivatoContratto(int numeroScheda, int idContratto, int durata, String descrizione) async {
+    SchedaPrivato scheda = listaPrivato.firstWhere((element) => element.numeroScheda == numeroScheda);
+    ContrattoPrivato contratto = listaContratto.firstWhere((element) => element.id == idContratto);
+    int differenzaOre;
+
+    if(scheda.durataIntervento > durata) {
+      differenzaOre = scheda.durataIntervento - durata;
+      scheda.durataIntervento = durata;
+      contratto.oreRimanenti = contratto.oreRimanenti + differenzaOre;
+    }
+    if(scheda.durataIntervento < durata) {
+      differenzaOre = durata - scheda.durataIntervento;
+      scheda.durataIntervento = durata;
+      contratto.oreRimanenti = contratto.oreRimanenti - differenzaOre;
+    }
+
+    scheda.descrizione = descrizione;
+    await aggiornaSchedaPrivato(scheda);
+    await aggiornaContrattoPrivato(idContratto);
+  }
+
   List<String> clientiContratti() {
     List<String> lista = [];
 
@@ -232,15 +286,25 @@ class SchedaController {
     await _db.updateContrattoPrivato(listaContratto.firstWhere((element) => element.id == id));
   }
 
+  Future<void> aggiornaSchedaComune(SchedaComune scheda) async {
+    await _db.updateSchedaComune(scheda);
+  }
+
+  Future<void> aggiornaSchedaPrivato(SchedaPrivato scheda) async {
+    await _db.updateSchedaPrivato(scheda);
+  }
+
   Future<void> inizializzaComune() async {
     await leggiContrattoComune();
     await leggiSchedeComune();
   }
 
   Future<void> inizializzaPrivato() async {
-
-    await leggiContrattoPrivato();
     await leggiSchedePrivatoContratto(0);
+  }
+
+  Future<void> inizializzaPrivatoContratto() async {
+    await leggiContrattoPrivato();
 
     for (var element in listaContratto) {
       await leggiSchedePrivatoContratto(element.id);

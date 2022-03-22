@@ -1,33 +1,23 @@
+
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivato.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivatoContratto.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/AggiornaSchedaComune.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
 
-///Widget contenente la base della prima pagina
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(home: _MainPageHome());
-  }
-}
-
-///Widget personalizzato della pagina iniziale
-class _MainPageHome extends StatelessWidget {
-  _MainPageHome({Key? key}) : super(key: key);
+class MainPageAggiorna extends StatelessWidget {
+  MainPageAggiorna({Key? key}) : super(key: key);
   final SchedaController controller = SchedaController();
 
+
   @override
   Widget build(BuildContext context) {
+
     var _text = [
-      "Scheda Comune",
-      "Scheda Privato",
-      "Scheda per Contratto",
-      "Home"
+      "Aggiorna Scheda Comune",
+      "Aggiorna Scheda Privato",
+      "Aggiorna Scheda per Contratto",
+      "Aggiorna"
     ];
 
     return Scaffold(
@@ -46,7 +36,7 @@ class _MainPageHome extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreaSchedeComune()));
+                          builder: (context) => const AggiornaSchedaComune()));
                   await _initComune(context);
                 },
                 child: Text(_text[0]),
@@ -62,7 +52,7 @@ class _MainPageHome extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreaSchedaPrivato()));
+                          builder: (context) => const AggiornaSchedaComune()));
                   await _initPrivato(context);
                 },
                 child: Text(_text[1]),
@@ -78,7 +68,7 @@ class _MainPageHome extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const CreaSchedaPrivatoContratto()));
+                          const AggiornaSchedaComune()));
                   await _initPrivatoContratto(context);
                 },
                 child: Text(_text[2]),
@@ -134,4 +124,5 @@ class _MainPageHome extends StatelessWidget {
                   ErrorPage("ERRORE! Devi creare un contratto privato")));
     }
   }
+
 }

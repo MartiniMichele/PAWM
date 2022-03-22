@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageAggiorna.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageContratti.dart';
 
 class MyDrawer extends StatelessWidget {
   final SchedaController controller = SchedaController();
 
   MyDrawer({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +40,16 @@ class MyDrawer extends StatelessWidget {
             onTap: () => {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const MainPage()))
+            },
+          ),
+          ListTile(
+            tileColor: Colors.white,
+            title: const Text("Aggiorna schede"),
+            onTap: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainPageAggiorna()))
             },
           ),
         ],
