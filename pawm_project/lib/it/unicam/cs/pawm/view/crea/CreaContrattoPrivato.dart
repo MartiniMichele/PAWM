@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
 
-class CreaContrattoComune extends StatefulWidget {
-  const CreaContrattoComune({Key? key}) : super(key: key);
+class CreaContrattoPrivato extends StatefulWidget {
+  const CreaContrattoPrivato({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _CreaContrattoComuneState();
+    return _CreaContrattoPrivatoState();
   }
 }
 
-class _CreaContrattoComuneState extends State<CreaContrattoComune> {
+class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
   final SchedaController controller = SchedaController();
   final oreController = TextEditingController();
   final valoreController = TextEditingController();
+  final clienteController = TextEditingController();
   DateTime data = DateTime.now();
   String oreText = "";
   String valoreText = "";
@@ -24,7 +25,7 @@ class _CreaContrattoComuneState extends State<CreaContrattoComune> {
     return Scaffold(
         drawer: MyDrawer(),
         appBar: AppBar(
-          title: const Text("Contratto Comune"),
+          title: const Text("Contratto Privato"),
           backgroundColor: Colors.green,
         ),
         body: Column(
@@ -41,6 +42,10 @@ class _CreaContrattoComuneState extends State<CreaContrattoComune> {
             Text("valore contratto: ${valoreController.text}",
                 style: const TextStyle(fontSize: 18)),
             buildValore("Valore: "),
+            const SizedBox(
+              height: 10,
+            ),
+            buildCliente("Cliente"),
             const SizedBox(
               height: 50,
             ),
@@ -76,9 +81,20 @@ class _CreaContrattoComuneState extends State<CreaContrattoComune> {
         }),
       );
 
-  confermaCreazione() {
-    controller.creaContrattoComune(
-        int.parse(oreController.text), int.parse(valoreController.text));
+  Widget buildCliente(String text) => TextField(
+        autocorrect: true,
+        controller: clienteController,
+        decoration: InputDecoration(
+          labelText: text,
+          border: const OutlineInputBorder(),
+        ),
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+      );
+
+  void confermaCreazione() {
+    controller.creaContrattoPrivato(int.parse(oreController.text),
+        int.parse(valoreController.text), clienteController.text);
 
     _showToast(context);
   }
@@ -88,8 +104,7 @@ class _CreaContrattoComuneState extends State<CreaContrattoComune> {
     scaffold.showSnackBar(
       SnackBar(
         content: const Text('Contratto creato'),
-        action: SnackBarAction(
-            label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }

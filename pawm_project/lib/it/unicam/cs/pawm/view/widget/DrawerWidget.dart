@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/ErrorPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageAggiorna.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageContratti.dart';

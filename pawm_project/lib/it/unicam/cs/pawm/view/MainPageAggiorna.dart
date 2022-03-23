@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/AggiornaSchedaComune.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/aggiorna/AggiornaSchedaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/ErrorPage.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/aggiorna/AggiornaSchedaPrivato.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/aggiorna/AggiornaSchedaPrivatoContratto.dart';
 
 class MainPageAggiorna extends StatelessWidget {
   MainPageAggiorna({Key? key}) : super(key: key);
@@ -52,7 +54,7 @@ class MainPageAggiorna extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AggiornaSchedaComune()));
+                          builder: (context) => const AggiornaSchedaPrivato()));
                   await _initPrivato(context);
                 },
                 child: Text(_text[1]),
@@ -64,12 +66,14 @@ class MainPageAggiorna extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
 
+                  await _initPrivatoContratto(context);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                          const AggiornaSchedaComune()));
-                  await _initPrivatoContratto(context);
+                          const AggiornaSchedePrivatoContratto()));
+
                 },
                 child: Text(_text[2]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),

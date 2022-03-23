@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaContrattoComune.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaContrattoPrivato.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/crea/CreaContrattoComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/crea/CreaContrattoPrivato.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
 
 class MainPageContratti extends StatelessWidget {
   const MainPageContratti({Key? key}) : super(key: key);

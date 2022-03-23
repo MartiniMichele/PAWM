@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivato.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaPrivatoContratto.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/CreaSchedaComune.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/ErrorPage.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/crea/CreaSchedaPrivato.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/crea/CreaSchedaPrivatoContratto.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/crea/CreaSchedaComune.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/ErrorPage.dart';
 
 ///Widget contenente la base della prima pagina
 class MainPage extends StatelessWidget {
@@ -74,12 +74,14 @@ class _MainPageHome extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
 
+                  await _initPrivatoContratto(context);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                               const CreaSchedaPrivatoContratto()));
-                  await _initPrivatoContratto(context);
+
                 },
                 child: Text(_text[2]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),

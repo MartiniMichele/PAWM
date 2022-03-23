@@ -5,31 +5,43 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 
-class CreaSchedaPrivato extends StatefulWidget {
-  const CreaSchedaPrivato({Key? key}) : super(key: key);
+class CreaSchedeComune extends StatefulWidget {
+  const CreaSchedeComune({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _CreaSchedaPrivatoWidgetState();
+    return _CreaSchedaComuneWidgetState();
   }
 }
 
-class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
+class _CreaSchedaComuneWidgetState extends State<CreaSchedeComune> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
-  final clienteController = TextEditingController();
-  final descrizioneController = TextEditingController();
   final screenshotController = ScreenshotController();
+  final descrizioneController = TextEditingController();
   File? fileImage;
   DateTime data = DateTime.now();
-  String durataText = "";
   String numeroIntervento = "";
+  String oreRimanenti = "";
   String dataText = "";
   String oraText = "";
+  String durataText = "durata intervento:";
+  String ufficio = "Urbanistica";
+  final uffici = [
+    "Ragioneria",
+    "Tributi",
+    "Ufficio Tecnico",
+    "Urbanistica",
+    "Affari Generali",
+    "Anagrafe",
+    "Vigili",
+    "Servizi Sociali",
+    "Protezione Civile"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +50,7 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
       child: Scaffold(
         drawer: MyDrawer(),
         appBar: AppBar(
-          title: const Text("Scheda Privato"),
+          title: const Text("Scheda Comune"),
           backgroundColor: Colors.green,
         ),
         body: Column(
@@ -52,17 +64,22 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
             const SizedBox(
               height: 10,
             ),
+            DropdownButton(
+                value: ufficio,
+                items: uffici.map(buildDropDown).toList(),
+                onChanged: (value) =>
+                    setState(() => ufficio = value.toString())),
             const SizedBox(
               height: 10,
             ),
             buildMultilineText("descrizione"),
-            const SizedBox(
-              height: 10,
-            ),
-            buildCliente("Cliente"),
             Row(
               children: [
                 Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
+                const SizedBox(
+                  width: 40,
+                ),
+                Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -100,7 +117,7 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
                     onPressed: confermaCreazione,
                     child: const Text("Crea Scheda")),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -130,17 +147,6 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         maxLines: null,
       );
 
-  Widget buildCliente(String text) => TextField(
-        autocorrect: true,
-        controller: clienteController,
-        decoration: InputDecoration(
-          labelText: text,
-          border: const OutlineInputBorder(),
-        ),
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.done,
-      );
-
   Widget buildImageButton() => ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
         child: const Text("Scegli immagine"),
@@ -166,16 +172,28 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
         fit: BoxFit.cover,
       );
 
-  void confermaCreazione() async {
-    controller.creaSchedaPrivato(
+  DropdownMenuItem<String> buildDropDown(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      );
+
+  Future<void> confermaCreazione() async {
+    await controller.creaSchedaComune(
         int.parse(durataController.text),
+        ufficio,
         "${data.day}/${data.month}/${data.year}",
         "${data.hour}:${data.minute}",
-        descrizioneController.text,
-        clienteController.text);
+        descrizioneController.text);
+
     setState(() {
       numeroIntervento = "N.Intervento: " +
-          controller.listaPrivato.last.numeroScheda.toString();
+          controller.contrattoComune.listaSchede.last.numeroIntervento
+              .toString();
+      oreRimanenti = "ore Rimanenti: " +
+          controller.contrattoComune.oreRimanenti.toString();
       dataText = "data: ${data.day}/${data.month}/${data.year}";
       oraText = "ora: ${data.hour}:${data.minute}";
     });
@@ -187,10 +205,11 @@ class _CreaSchedaPrivatoWidgetState extends State<CreaSchedaPrivato> {
   }
 
   Future<void> saveImage(Uint8List bytes) async {
-    String name = controller.listaPrivato.last.numeroScheda.toString();
+    String name =
+        controller.contrattoComune.listaSchede.last.numeroIntervento.toString();
 
     if (await _requestPermission(Permission.storage)) {
-      await ImageGallerySaver.saveImage(bytes, name: "Mit_Privato_" + name);
+      await ImageGallerySaver.saveImage(bytes, name: "Mit_Comune_" + name);
     } else {
       return;
     }

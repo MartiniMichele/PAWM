@@ -48,8 +48,8 @@ class SchedaController {
     contrattoComune.oreRimanenti =
         contrattoComune.oreRimanenti - oreIntervento;
     ///salva scheda nel DB ed aggiorna il contratto
-    salvaSchedaComune(scheda);
-    await aggiornaContrattoComune();
+    _salvaSchedaComune(scheda);
+    await _aggiornaContrattoComune();
     log("Scheda comune creata e aggiunta al contratto");
     return contrattoComune.listaSchede.contains(scheda);
   }
@@ -78,7 +78,7 @@ class SchedaController {
         cliente: cliente);
 
     ///salva la scheda nel DB
-    salvaSchedaPrivato(scheda);
+    _salvaSchedaPrivato(scheda);
     listaPrivato.add(scheda);
     log("Scheda privato creata e aggiunta alla lista");
     return listaPrivato.contains(scheda);
@@ -94,7 +94,7 @@ class SchedaController {
     );
     contrattoComune = contratto;
     ///salva il contratto nel DB
-    salvaContrattoComune();
+    _salvaContrattoComune();
     log("contratto comune creato");
   }
 
@@ -119,7 +119,7 @@ class SchedaController {
           cliente: cliente);
 
       ///salva il contratto nel DB
-      salvaContrattoPrivato(contratto);
+      _salvaContrattoPrivato(contratto);
       listaContratto.add(contratto);
       log("contratto privato creato ed aggiunto alla lista");
       return true;
@@ -153,8 +153,8 @@ class SchedaController {
     contratto.listaSchede.add(scheda);
     contratto.oreRimanenti = contratto.oreRimanenti - durata;
     ///salva la scheda nel DB ed aggiorna il contratto
-    salvaSchedaPrivatoContratto(scheda);
-    await aggiornaContrattoPrivato(contratto.id);
+    _salvaSchedaPrivatoContratto(scheda);
+    await _aggiornaContrattoPrivato(contratto.id);
 
     log("scheda per contratto creata ed aggiunta alla lista");
 
@@ -179,8 +179,8 @@ class SchedaController {
 
     scheda.ufficio = ufficio;
     scheda.descrizione = descrizione;
-    await aggiornaSchedaComune(scheda);
-    await aggiornaContrattoComune();
+    await _aggiornaSchedaComune(scheda);
+    await _aggiornaContrattoComune();
   }
 
   ///metodo per aggiornare una scheda privato
@@ -190,13 +190,14 @@ class SchedaController {
     scheda.descrizione = descrizione;
     scheda.cliente = cliente;
 
-    await aggiornaSchedaPrivato(scheda);
+    await _aggiornaSchedaPrivato(scheda);
   }
 
   ///metodo per aggiornare una scheda privato per contratto
   Future<void> correggiSchedaPrivatoContratto(int numeroScheda, int idContratto, int durata, String descrizione) async {
-    SchedaPrivato scheda = listaPrivato.firstWhere((element) => element.numeroScheda == numeroScheda);
     ContrattoPrivato contratto = listaContratto.firstWhere((element) => element.id == idContratto);
+    SchedaPrivato scheda = contratto.listaSchede.firstWhere((element) => element.numeroScheda == numeroScheda);
+
     int differenzaOre;
 
     if(scheda.durataIntervento > durata) {
@@ -211,8 +212,8 @@ class SchedaController {
     }
 
     scheda.descrizione = descrizione;
-    await aggiornaSchedaPrivato(scheda);
-    await aggiornaContrattoPrivato(idContratto);
+    await _aggiornaSchedaPrivato(scheda);
+    await _aggiornaContrattoPrivato(idContratto);
   }
 
   List<String> clientiContratti() {
@@ -225,23 +226,23 @@ class SchedaController {
     return lista;
   }
 
-  void salvaContrattoComune() {
+  void _salvaContrattoComune() {
      _db.writeContrattoComune(contrattoComune);
   }
 
-  void salvaSchedaComune(SchedaComune scheda) {
+  void _salvaSchedaComune(SchedaComune scheda) {
     _db.writeSchedaComune(scheda);
   }
 
-  void salvaSchedaPrivato(SchedaPrivato scheda)  {
+  void _salvaSchedaPrivato(SchedaPrivato scheda)  {
     _db.writeSchedaPrivatoContratto(scheda);
   }
 
-  void salvaSchedaPrivatoContratto(SchedaPrivato scheda) {
+  void _salvaSchedaPrivatoContratto(SchedaPrivato scheda) {
     _db.writeSchedaPrivatoContratto(scheda);
   }
 
-  void salvaContrattoPrivato(ContrattoPrivato contratto)  {
+  void _salvaContrattoPrivato(ContrattoPrivato contratto)  {
     _db.writeContrattoPrivato(contratto);
   }
 
@@ -278,19 +279,19 @@ class SchedaController {
 
   }
 
-  Future<void> aggiornaContrattoComune() async {
+  Future<void> _aggiornaContrattoComune() async {
     await _db.updateContrattoComune(contrattoComune);
   }
 
-  Future<void> aggiornaContrattoPrivato(int id) async {
+  Future<void> _aggiornaContrattoPrivato(int id) async {
     await _db.updateContrattoPrivato(listaContratto.firstWhere((element) => element.id == id));
   }
 
-  Future<void> aggiornaSchedaComune(SchedaComune scheda) async {
+  Future<void> _aggiornaSchedaComune(SchedaComune scheda) async {
     await _db.updateSchedaComune(scheda);
   }
 
-  Future<void> aggiornaSchedaPrivato(SchedaPrivato scheda) async {
+  Future<void> _aggiornaSchedaPrivato(SchedaPrivato scheda) async {
     await _db.updateSchedaPrivato(scheda);
   }
 

@@ -5,26 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/schede/SchedaComune.dart';
-import 'package:pawm_project/it/unicam/cs/pawm/view/DrawerWidget.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/schede/SchedaPrivato.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
 
-class AggiornaSchedaComune extends StatefulWidget {
-  const AggiornaSchedaComune({Key? key}) : super(key: key);
+class AggiornaSchedaPrivato extends StatefulWidget {
+  const AggiornaSchedaPrivato({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _AggiornaSchedaComuneState();
+    return _AggiornaSchedaPrivatoState();
   }
 }
 
-class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
+class _AggiornaSchedaPrivatoState extends State<AggiornaSchedaPrivato> {
   final SchedaController controller = SchedaController();
   final durataController = TextEditingController();
   final numeroInterventoController = TextEditingController();
   final screenshotController = ScreenshotController();
   final descrizioneController = TextEditingController();
+  final clienteController = TextEditingController();
   bool isChosen = false;
   int nIntervento = 0;
   File? fileImage;
@@ -32,20 +33,9 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
   String oreRimanenti = "";
   String dataText = "";
   String oraText = "";
+  String cliente = "";
   String durataText = "durata intervento:";
   String numeroInterventoText = "numero intervento:";
-  String ufficio = "Ragioneria";
-  final uffici = [
-    "Ragioneria",
-    "Tributi",
-    "Ufficio Tecnico",
-    "Urbanistica",
-    "Affari Generali",
-    "Anagrafe",
-    "Vigili",
-    "Servizi Sociali",
-    "Protezione Civile"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +44,7 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
       child: Scaffold(
         drawer: MyDrawer(),
         appBar: AppBar(
-          title: const Text("Aggiorna Scheda Comune"),
+          title: const Text("Aggiorna Scheda Privato"),
           backgroundColor: Colors.green,
         ),
         body: Column(
@@ -87,10 +77,6 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
           const SizedBox(
             height: 10,
           ),
-          DropdownButton(
-              value: ufficio,
-              items: uffici.map(buildDropDown).toList(),
-              onChanged: (value) => setState(() => ufficio = value.toString())),
           const SizedBox(
             height: 10,
           ),
@@ -98,13 +84,13 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
           const SizedBox(
             height: 10,
           ),
+          buildCliente("cliente"),
+          const SizedBox(
+            height: 10,
+          ),
           Row(
             children: [
               Text(numeroIntervento, style: const TextStyle(fontSize: 18)),
-              const SizedBox(
-                width: 40,
-              ),
-              Text(oreRimanenti, style: const TextStyle(fontSize: 18)),
             ],
           ),
           const SizedBox(
@@ -178,6 +164,17 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
         }),
       );
 
+  Widget buildCliente(String text) => TextField(
+    autocorrect: true,
+    controller: clienteController,
+    decoration: InputDecoration(
+      labelText: text,
+      border: const OutlineInputBorder(),
+    ),
+    keyboardType: TextInputType.text,
+    textInputAction: TextInputAction.done,
+  );
+
   Widget buildNumeroIntervento(String text) => Expanded(
           child: TextField(
         controller: numeroInterventoController,
@@ -200,14 +197,6 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
         ),
         keyboardType: TextInputType.multiline,
         maxLines: null,
-      );
-
-  DropdownMenuItem<String> buildDropDown(String item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          item,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
       );
 
   Widget buildImageButton() => ElevatedButton(
@@ -236,11 +225,9 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
       );
 
   Future<void> saveImage(Uint8List bytes) async {
-    String name =
-        controller.contrattoComune.listaSchede.last.numeroIntervento.toString();
 
     if (await _requestPermission(Permission.storage)) {
-      await ImageGallerySaver.saveImage(bytes, name: "Mit_Comune_" + name);
+      await ImageGallerySaver.saveImage(bytes, name: "Mit_Privato_Aggiornato_$nIntervento");
     } else {
       return;
     }
@@ -260,11 +247,11 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
     }
   }
 
-  void _showToast(BuildContext context) {
+  void _showToast(BuildContext context, String text) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content: const Text('Scheda aggiornata'),
+        content: Text(text),
         action: SnackBarAction(
             label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
       ),
@@ -272,12 +259,16 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
   }
 
   void _schedaScelta() {
-    nIntervento = int.parse(numeroInterventoController.text);
-    SchedaComune scheda = controller.contrattoComune.listaSchede
-        .firstWhere((element) => element.numeroIntervento == nIntervento);
 
-    durataController.text = "${scheda.durata}";
-    ufficio = scheda.ufficio;
+    if(controller.listaPrivato.isEmpty) _showToast(context, "Lista vuota, crea una scheda");
+
+    nIntervento = int.parse(numeroInterventoController.text);
+    SchedaPrivato scheda = controller.listaPrivato
+        .firstWhere((element) => element.numeroScheda == nIntervento);
+
+    durataController.text = "${scheda.durataIntervento}";
+    cliente = scheda.cliente;
+    clienteController.text = cliente;
     descrizioneController.text = scheda.descrizione;
 
     dataText = "data: ${scheda.data}";
@@ -289,8 +280,8 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
   }
 
   Future<void> _confermaAggiornamento() async {
-    await controller.correggiSchedaComune(nIntervento,
-        int.parse(durataController.text), ufficio, descrizioneController.text);
+    await controller.correggiSchedaPrivato(nIntervento,
+        int.parse(durataController.text), descrizioneController.text, cliente);
 
     setState(() {
       numeroIntervento = "N.Intervento: " + nIntervento.toString();
@@ -301,6 +292,6 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
     final image = await screenshotController.capture();
     await saveImage(image!);
 
-    _showToast(context);
+    _showToast(context, "Scheda Aggiornata");
   }
 }
