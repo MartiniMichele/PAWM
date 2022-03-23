@@ -16,7 +16,6 @@ class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
   final oreController = TextEditingController();
   final valoreController = TextEditingController();
   final clienteController = TextEditingController();
-  DateTime data = DateTime.now();
   String oreText = "";
   String valoreText = "";
 
@@ -96,14 +95,14 @@ class _CreaContrattoPrivatoState extends State<CreaContrattoPrivato> {
     controller.creaContrattoPrivato(int.parse(oreController.text),
         int.parse(valoreController.text), clienteController.text);
 
-    _showToast(context);
+    _showToast(context, "Contratto Creato");
   }
 
-  void _showToast(BuildContext context) {
+  void _showToast(BuildContext context, String text) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content: const Text('Contratto creato'),
+        content: Text(text),
         action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );

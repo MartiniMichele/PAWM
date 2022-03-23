@@ -23,9 +23,9 @@ class AggiornaSchedePrivatoContratto extends StatefulWidget {
 class _AggiornaSchedePrivatoContrattoState
     extends State<AggiornaSchedePrivatoContratto> {
   final SchedaController controller = SchedaController();
+  final screenshotController = ScreenshotController();
   final durataController = TextEditingController();
   final numeroInterventoController = TextEditingController();
-  final screenshotController = ScreenshotController();
   final descrizioneController = TextEditingController();
   bool isChosen = false;
   int nIntervento = 0;

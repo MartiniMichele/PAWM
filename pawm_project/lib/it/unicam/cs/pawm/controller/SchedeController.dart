@@ -216,6 +216,16 @@ class SchedaController {
     await _aggiornaContrattoPrivato(idContratto);
   }
 
+  Future<void> rinnovaContrattoPrivato(String cliente, int oreTotali, int valore) async {
+
+    ContrattoPrivato contratto = listaContratto.firstWhere((element) => element.cliente == cliente);
+    contratto.oreTotali = oreTotali;
+    contratto.oreRimanenti = oreTotali;
+    contratto.valoreContratto = valore;
+
+    await _aggiornaContrattoPrivato(contratto.id);
+  }
+
   List<String> clientiContratti() {
     List<String> lista = [];
 

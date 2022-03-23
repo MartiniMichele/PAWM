@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/aggiorna/AggiornaContratto.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/aggiorna/AggiornaSchedaComune.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/widget/DrawerWidget.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/widget/ErrorPage.dart';
@@ -11,20 +11,19 @@ class MainPageAggiorna extends StatelessWidget {
   MainPageAggiorna({Key? key}) : super(key: key);
   final SchedaController controller = SchedaController();
 
-
   @override
   Widget build(BuildContext context) {
-
     var _text = [
       "Aggiorna Scheda Comune",
       "Aggiorna Scheda Privato",
       "Aggiorna Scheda per Contratto",
+      "Rinnova Contratto",
       "Aggiorna"
     ];
 
     return Scaffold(
         drawer: MyDrawer(),
-        appBar: AppBar(backgroundColor: Colors.green, title: Text(_text[3])),
+        appBar: AppBar(backgroundColor: Colors.green, title: Text(_text[4])),
         body: SizedBox(
           width: double.infinity,
           child: Column(
@@ -34,7 +33,6 @@ class MainPageAggiorna extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -50,7 +48,6 @@ class MainPageAggiorna extends StatelessWidget {
               //metodo senza parentesi perché è un riferimento ad esso
               ElevatedButton(
                 onPressed: () async {
-
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -65,17 +62,30 @@ class MainPageAggiorna extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-
                   await _initPrivatoContratto(context);
 
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                          const AggiornaSchedePrivatoContratto()));
-
+                              const AggiornaSchedePrivatoContratto()));
                 },
                 child: Text(_text[2]),
+                style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await _initPrivatoContratto(context);
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AggiornaContratto()));
+                },
+                child: Text(_text[3]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
               )
             ],
@@ -84,7 +94,6 @@ class MainPageAggiorna extends StatelessWidget {
   }
 
   Future<void> _initComune(context) async {
-
     try {
       await controller.inizializzaComune();
     } catch (err) {
@@ -117,6 +126,7 @@ class MainPageAggiorna extends StatelessWidget {
       }
     }
     _checkDati(context);
+    print(controller.listaContratto);
   }
 
   void _checkDati(context) {
@@ -128,5 +138,4 @@ class MainPageAggiorna extends StatelessWidget {
                   ErrorPage("ERRORE! Devi creare un contratto privato")));
     }
   }
-
 }
