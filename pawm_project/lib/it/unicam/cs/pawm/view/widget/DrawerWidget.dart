@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/controller/SchedeController.dart';
+import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageVisualizza.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/widget/ErrorPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPage.dart';
 import 'package:pawm_project/it/unicam/cs/pawm/view/MainPageAggiorna.dart';
@@ -46,10 +47,24 @@ class MyDrawer extends StatelessWidget {
             tileColor: Colors.white,
             title: const Text("Aggiorna schede"),
             onTap: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MainPageAggiorna()))
+            },
+          ),
+          ListTile(
+            tileColor: Colors.white,
+            title: const Text("Visualizza Dati"),
+            onTap: () async {
+              await _initComune(context);
+              await _initPrivato(context);
+              await _initPrivatoContratto(context);
+
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPageAggiorna()))
+                      builder: (context) => MainPageVisualizza()));
+
+              _checkDati(context);
             },
           ),
         ],
@@ -57,7 +72,7 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  void initComune(context) async {
+  Future<void> _initComune(context) async {
     try {
       await controller.inizializzaComune();
     } catch (err) {
@@ -69,14 +84,43 @@ class MyDrawer extends StatelessWidget {
     }
   }
 
-  void initPrivato(context) async {
-    if (controller.listaPrivato.isEmpty || controller.listaContratto.isEmpty) {
+  Future<void> _initPrivato(context) async {
+    if (controller.listaPrivato.isEmpty) {
       try {
         await controller.inizializzaPrivato();
       } catch (err) {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
       }
+    }
+  }
+
+  Future<void> _initPrivatoContratto(context) async {
+    if (controller.listaContratto.isEmpty) {
+      try {
+        await controller.inizializzaPrivatoContratto();
+      } catch (err) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
+      }
+    }
+    _checkDati(context);
+  }
+
+  void _checkDati(context) {
+    if (controller.listaContratto.isEmpty) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ErrorPage("ERRORE! Devi creare un contratto privato")));
+    }
+    if (controller.contrattoComune.id == 0) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ErrorPage("ERRORE! Devi creare un contratto comune")));
     }
   }
 }

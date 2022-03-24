@@ -62,7 +62,6 @@ class _AggiornaSchedePrivatoContrattoState
               height: 10,
             ),
             Expanded(
-              //height: 400,
               child: _buildPage(),
             )
           ],
@@ -137,7 +136,7 @@ class _AggiornaSchedePrivatoContrattoState
                         style: ElevatedButton.styleFrom(
                             primary: Colors.green.shade700),
                         onPressed: _confermaAggiornamento,
-                        child: const Text("Crea Scheda")),
+                        child: const Text("Aggiorna Scheda")),
                   ],
                 ),
               ],

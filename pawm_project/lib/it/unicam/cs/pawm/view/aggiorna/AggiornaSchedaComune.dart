@@ -140,7 +140,7 @@ class _AggiornaSchedaComuneState extends State<AggiornaSchedaComune> {
                   style:
                       ElevatedButton.styleFrom(primary: Colors.green.shade700),
                   onPressed: _confermaAggiornamento,
-                  child: const Text("Crea Scheda")),
+                  child: const Text("Aggiorna Scheda")),
             ],
           ),
         ],

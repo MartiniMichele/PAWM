@@ -81,6 +81,7 @@ class _MainPageHome extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) =>
                               const CreaSchedaPrivatoContratto()));
+                  _checkDati(context);
 
                 },
                 child: Text(_text[2]),
@@ -124,7 +125,6 @@ class _MainPageHome extends StatelessWidget {
             MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
       }
     }
-    _checkDati(context);
   }
 
   void _checkDati(context) {

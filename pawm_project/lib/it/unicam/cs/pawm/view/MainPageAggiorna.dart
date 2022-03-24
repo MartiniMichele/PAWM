@@ -84,6 +84,7 @@ class MainPageAggiorna extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const AggiornaContratto()));
+                  _checkDati(context);
                 },
                 child: Text(_text[3]),
                 style: ElevatedButton.styleFrom(primary: Colors.green.shade700),
@@ -125,8 +126,6 @@ class MainPageAggiorna extends StatelessWidget {
             MaterialPageRoute(builder: (context) => ErrorPage("ERRORE!")));
       }
     }
-    _checkDati(context);
-    print(controller.listaContratto);
   }
 
   void _checkDati(context) {

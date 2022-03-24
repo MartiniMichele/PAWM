@@ -236,6 +236,16 @@ class SchedaController {
     return lista;
   }
 
+  List<SchedaPrivato> schedeContratti() {
+    List<SchedaPrivato> lista = [];
+
+    for(var element in listaContratto) {
+      lista.addAll(element.listaSchede);
+    }
+
+    return lista;
+  }
+
   void _salvaContrattoComune() {
      _db.writeContrattoComune(contrattoComune);
   }

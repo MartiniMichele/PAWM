@@ -126,7 +126,7 @@ class _AggiornaSchedaPrivatoState extends State<AggiornaSchedaPrivato> {
                   style:
                       ElevatedButton.styleFrom(primary: Colors.green.shade700),
                   onPressed: _confermaAggiornamento,
-                  child: const Text("Crea Scheda")),
+                  child: const Text("Aggiorna Scheda")),
             ],
           ),
         ],
